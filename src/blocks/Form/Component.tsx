@@ -4,13 +4,13 @@ import type { Form as FormType } from '@payloadcms/plugin-form-builder/types'
 import { useRouter } from 'next/navigation'
 import React, { useCallback, useState } from 'react'
 import { useForm, FormProvider } from 'react-hook-form'
-import RichText from '@/components/RichText'
-import { Button } from '@/components/ui/button'
+import RichText from '@/shared/components/RichText'
+import { Button } from '@/shared/components/ui/button'
 import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical'
 
 import { buildInitialFormState } from './buildInitialFormState'
 import { fields } from './fields'
-import { getClientSideURL } from '@/utilities/getURL'
+import { getClientSideURL } from '@/shared/utilities/getURL'
 
 export type Value = unknown
 
