@@ -9,6 +9,21 @@ const NEXT_PUBLIC_SERVER_URL = process.env.VERCEL_URL // Automatically provided 
 const nextConfig = {
   images: {
     remotePatterns: [
+      // Allow images from the same domain as your application
+      {
+        protocol: 'https',
+        hostname: 'sas-studio.vercel.app',
+      },
+      // Allow images from your S3 storage
+      {
+        hostname: process.env.S3_ENDPOINT?.replace('https://', '').replace('http://', '') || '',
+        protocol: 'https',
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+      },
+      // Dynamic hostname based on environment
       ...(NEXT_PUBLIC_SERVER_URL
         ? [NEXT_PUBLIC_SERVER_URL].map((item) => {
             const url = new URL(item)
@@ -18,14 +33,29 @@ const nextConfig = {
             }
           })
         : []),
-      {
-        hostname: 'vvbsxhulglwtgatwygut.supabase.co', // Replace with your Supabase storage domain
-        protocol: 'https',
-      },
     ],
+    minimumCacheTTL: 300,
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    formats: ['image/webp'],
   },
   reactStrictMode: true,
   redirects,
+  typescript: {
+    ignoreBuildErrors: false,
+  },
+  webpack: (config) => {
+    config.externals = [...(config.externals || []), 'sharp']
+    return config
+  },
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '10mb',
+    },
+  },
+  httpAgentOptions: {
+    keepAlive: true,
+  },
 }
 
 export default withPayload(nextConfig)
